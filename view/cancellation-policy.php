@@ -1,13 +1,18 @@
+<?php
+    session_start();
+    if(isset($_COOKIE['status'])){
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cancellation Policy</title>
-    <link rel="stylesheet" href="css/cancellation-policy.css">
+    <link rel="stylesheet" href="../assets/css/cancellation-policy.css">
 </head>
 <body>
-    <div class="container">
+    <form method = "POST">
+        <div class="container">
         <h2>Cancellation Policy</h2>
         <div class="policy">
             <p><strong>Flexible Rate:</strong></p>
@@ -26,7 +31,14 @@
         <h3>Your Bookings</h3>
         <div id="cancellation-success" class="success"></div>
         <p>Please contact support to view or cancel bookings.</p>
-        <a class="back-button" href="index.html">Back</a>
+        <a class="back-button" href="index.php">Back</a>
     </div>
+    </form>    
 </body>
 </html>
+<?php
+    }else{
+        header('location: login.html');
+    }
+
+?>

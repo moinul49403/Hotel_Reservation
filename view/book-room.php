@@ -1,13 +1,18 @@
+<?php
+    session_start();
+    if(isset($_COOKIE['status'])){
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book a Room</title>
-    <link rel="stylesheet" href="../css/book-room.css">
+    <link rel="stylesheet" href="../assets/css/book-room.css">
 </head>
 <body>
-    <div class="container">
+    <form method = "POST">
+        <div class="container">
         <h2>Book a Room</h2>
         <div id="booking-success" class="success">Booking confirmed! Please check your email.</div>
         <label for="guest-name">Guest Name:</label>
@@ -35,9 +40,15 @@
         </select>
         <div id="rate-type-error" class="error">Please select a rate type.</div>
         <button onclick="validateBooking()">Book Now</button>
-        <a class="back-button" href="index.html">Back</a>
+        <a class="back-button" href="index.php">Back</a>
     </div>
-
-    <script src="js/book-room.js"></script>
+    </form>
+    <script src="../assets/js/book-room.js"></script>
 </body>
 </html>
+<?php
+    }else{
+        header('location: login.html');
+    }
+
+?>

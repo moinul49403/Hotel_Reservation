@@ -1,13 +1,18 @@
+<?php
+    session_start();
+    if(isset($_COOKIE['status'])){
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing Summary</title>
-    <link rel="stylesheet" href="css/billing-summary.css">
+    <link rel="stylesheet" href="../assets/css/billing-summary.css">
 </head>
 <body>
-    <div class="container">
+    <form method = "POST">
+        <div class="container">
         <h2>Billing Summary</h2>
         <div id="billing-success" class="success">Receipt generated successfully!</div>
         <div id="billing-error" class="error"></div>
@@ -24,9 +29,15 @@
         <div id="split-count-error" class="error">Please enter a valid number (minimum 1).</div>
         <div id="split-entries"></div>
         <button onclick="validateReceipt()">Generate Receipt</button>
-        <a class="back-button" href="index.html">Back</a>
+        <a class="back-button" href="index.php">Back</a>
     </div>
-
-    <script src="js/billing-summary.js"></script>
+    </form>
+    <script src="../assets/js/billing-summary.js"></script>
 </body>
 </html>
+<?php
+    }else{
+        header('location: login.html');
+    }
+
+?>
