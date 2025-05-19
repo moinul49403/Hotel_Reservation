@@ -1,0 +1,238 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Reservation System - Landing Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 50px 20px;
+            position: relative;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0 0;
+        }
+        .auth-links {
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            padding: 10px 0;
+            text-align: right;
+        }
+        .auth-links a, .auth-links button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-left: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+        .auth-links a:hover, .auth-links button:hover {
+            background-color: #0056b3;
+        }
+        .auth-links p {
+            color: #333;
+            font-size: 0.9em;
+            margin: 0 0 5px 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .nav-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+        }
+        .nav-card a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .nav-card p {
+            color: #666;
+            margin: 10px 0 0;
+        }
+        .nav-card.active {
+            background-color: #e7f1ff;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            margin-top: 40px;
+        }
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .header p {
+                font-size: 1em;
+            }
+            .nav-card {
+                padding: 15px;
+            }
+            .auth-links {
+                position: static;
+                text-align: center;
+                padding: 10px 20px;
+            }
+            .auth-links a, .auth-links button {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to Our Hotel Reservation System</h1>
+        <p>Manage your stay with ease and convenience</p>
+        <div class="auth-links" id="auth-links"></div>
+    </div>
+    <div class="container">
+        <div class="nav-grid">
+            <div class="nav-card">
+                <a href="book-room.html">Book a Room</a>
+                <p>Reserve your stay with preferred room type and dates.</p>
+            </div>
+            <div class="nav-card">
+                <a href="review-system.html">Review System</a>
+                <p>Submit ratings, comments, and filter reviews by traveler type.</p>
+            </div>
+            <div class="nav-card">
+                <a href="cancellation-policy.html">Cancellation Policy</a>
+                <p>View terms and cancel bookings.</p>
+            </div>
+            <div class="nav-card">
+                <a href="group-bookings.html">Group Bookings</a>
+                <p>Reserve multiple rooms and coordinate event spaces.</p>
+            </div>
+            <div class="nav-card">
+                <a href="concierge-requests.html">Concierge Requests</a>
+                <p>Order services, book experiences, and track requests.</p>
+            </div>
+            <div class="nav-card">
+                <a href="billing-summary.html">Billing Summary</a>
+                <p>View charges, split payments, and generate receipts.</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p>© 2025 Hotel Reservation System. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Add click feedback to nav cards
+        const cards = document.querySelectorAll('.nav-card');
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                cards.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                const link = this.querySelector('a').href;
+                setTimeout(function() {
+                    window.location.href = link;
+                }, 200);
+            });
+        });
+
+        // Authentication navigation
+        function updateAuthLinks() {
+            const authLinks = document.getElementById('auth-links');
+            const session = JSON.parse(localStorage.getItem('session'));
+            if (session) {
+                authLinks.innerHTML = `
+                    <p>Welcome, ${session.email}!</p>
+                    <button onclick="logout()">Logout</button>
+                `;
+            } else {
+                authLinks.innerHTML = `
+                    <a href="login.html">Login</a>
+                    <a href="signup.html">Sign Up</a>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('session');
+            updateAuthLinks();
+            window.location.href = 'login.html';
+        }
+
+        // Initial render
+        updateAuthLinks();
+    </script>
+</body>
+</html>
